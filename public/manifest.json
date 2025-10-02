@@ -1,0 +1,24 @@
+{
+  "name": "QualiVerde - Scanner de Frutas",
+  "short_name": "QualiVerde",
+  "description": "Garantindo a Qualidade e Suculência de Seu Alimento",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e3a2e",
+  "theme_color": "#1e3a2e",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/placeholder.svg?height=192&width=192",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/placeholder.svg?height=512&width=512",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["food", "utilities", "productivity"],
+  "lang": "pt-BR"
+}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QualiVerde - Scanner de Frutas com IA</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4CAF50">
+</head>
+<body>
+    <!-- Tela Splash -->
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-content">
+            <div class="leaf-icon">
+                <span class="emoji">🍃</span>
+            </div>
+            <h1 class="app-name">QualiVerde</h1>
+            <p class="slogan">Garantindo a Qualidade e Suculência de Seu Alimento...</p>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
+    <!-- Tela Principal -->
+    <div id="main-app" class="main-app hidden">
+        <header class="app-header">
+            <div class="header-content">
+                <span class="emoji">🍃</span>
+                <h1>QualiVerde</h1>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Scanner Section -->
+            <div id="scanner-section" class="scanner-section">
+                <div class="scanner-header">
+                    <h2>Scanner de Frutas</h2>
+                    <p>Aponte a câmera para a fruta e descubra sua qualidade</p>
+                </div>
+
+                <div class="camera-container">
+                    <video id="camera-feed" class="camera-feed" autoplay playsinline></video>
+                    <canvas id="capture-canvas" class="capture-canvas hidden"></canvas>
+                    <div class="camera-overlay">
+                        <div class="scan-frame"></div>
+                    </div>
+                </div>
+
+                <div class="camera-controls">
+                    <button id="start-camera" class="btn btn-primary">
+                        <span class="emoji">📷</span>
+                        Iniciar Câmera
+                    </button>
+                    <button id="capture-photo" class="btn btn-success hidden">
+                        <span class="emoji">📸</span>
+                        <span id="capture-text">Capturar Foto</span>
+                    </button>
+                    <button id="stop-camera" class="btn btn-secondary hidden">
+                        <span class="emoji">⏹️</span>
+                        Parar Câmera
+                    </button>
+                </div>
+            </div>
+
+            <!-- Resultado da Análise -->
+            <div id="result-section" class="result-section hidden">
+                <div class="result-header">
+                    <h2>Resultado da Análise</h2>
+                    <p id="confidence-text" class="confidence-text">Confiança da IA: 100%</p>
+                </div>
+                <div class="result-content">
+                    <div class="fruit-info">
+                        <div class="fruit-icon">
+                            <span id="fruit-icon" class="emoji">🍎</span>
+                        </div>
+                        <h3 id="fruit-name">Fruta Identificada</h3>
+                        <div class="quality-score">
+                            <div class="quality-header">
+                                <span>Qualidade</span>
+                                <span id="quality-percentage">0%</span>
+                            </div>
+                            <div class="score-bar">
+                                <div id="quality-fill" class="score-fill"></div>
+                            </div>
+                            <div id="freshness-badge" class="freshness-badge">Boa</div>
+                        </div>
+                    </div>
+                    <div class="fruit-details">
+                        <h4>Características Detectadas pela IA</h4>
+                        <ul id="fruit-characteristics">
+                            <li>Analisando...</li>
+                        </ul>
+                    </div>
+                    <div class="fruit-recommendations">
+                        <h4>Recomendações da IA</h4>
+                        <ul id="fruit-recommendations">
+                            <li>Carregando...</li>
+                        </ul>
+                    </div>
+                    <button id="scan-again" class="btn btn-primary">
+                        <span class="emoji">🔄</span>
+                        Escanear Novamente
+                    </button>
+                </div>
+            </div>
+
+            <!-- Erro na Análise -->
+            <div id="error-section" class="error-section hidden">
+                <div class="error-content">
+                    <h3>Erro na Análise</h3>
+                    <p id="error-message">Erro ao analisar a fruta. Verifique se a imagem está clara e tente novamente.</p>
+                    <p id="error-details" class="error-details"></p>
+                    <div class="error-actions">
+                        <button id="try-again" class="btn btn-primary">
+                            Tentar Novamente
+                        </button>
+                        <button id="test-demo" class="btn btn-secondary">
+                            Testar com Maçã (Demo)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Frutas Suportadas -->
+            <div class="supported-fruits">
+                <h3>Frutas Suportadas</h3>
+                <div class="fruits-grid">
+                    <div class="fruit-item" data-fruit="banana">
+                        <span class="emoji">🍌</span>
+                        <span>Banana</span>
+                    </div>
+                    <div class="fruit-item" data-fruit="maca">
+                        <span class="emoji">🍎</span>
+                        <span>Maçã</span>
+                    </div>
+                    <div class="fruit-item" data-fruit="laranja">
+                        <span class="emoji">🍊</span>
+                        <span>Laranja</span>
+                    </div>
+                    <div class="fruit-item" data-fruit="mamao">
+                        <span class="emoji">🥭</span>
+                        <span>Mamão</span>
+                    </div>
+                    <div class="fruit-item" data-fruit="uva">
+                        <span class="emoji">🍇</span>
+                        <span>Uva</span>
+                    </div>
+                    <div class="fruit-item" data-fruit="melancia">
+                        <span class="emoji">🍉</span>
+                        <span>Melancia</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

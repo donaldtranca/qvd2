@@ -118,23 +118,76 @@ class QualiVerdeApp {
       const imageBase64 = this.canvas.toDataURL("image/jpeg", 0.8).split(",")[1]
       console.log("[QualiVerde] Imagem convertida, enviando para API")
 
-      const response = await fetch("/api/identify-fruit", {
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.GROQ_API_KEY || "gsk_VqPqxqJqxqJqxqJqxqJqWGdyb3FYxqJqxqJqxqJqxqJqxqJqxqJq"}`,
         },
-        body: JSON.stringify({ imageBase64 }),
+        body: JSON.stringify({
+          model: "llama-3.2-11b-vision-preview",
+          messages: [
+            {
+              role: "user",
+              content: [
+                {
+                  type: "text",
+                  text: `Você é um especialista em análise de qualidade de frutas. Analise esta imagem e identifique:
+1. Qual fruta é (banana, maçã, laranja, mamão, uva ou melancia)
+2. Qualidade geral (0-100%)
+3. Nível de frescor (boa, média ou ruim)
+4. Características visuais observadas
+5. Recomendações de consumo
+
+Responda APENAS com um JSON válido neste formato exato:
+{
+  "fruitName": "nome da fruta",
+  "confidence": 95,
+  "qualityScore": 85,
+  "freshness": "boa",
+  "characteristics": ["característica 1", "característica 2", "característica 3"],
+  "recommendations": ["recomendação 1", "recomendação 2", "recomendação 3"]
+}`,
+                },
+                {
+                  type: "image_url",
+                  image_url: {
+                    url: `data:image/jpeg;base64,${imageBase64}`,
+                  },
+                },
+              ],
+            },
+          ],
+          temperature: 0.7,
+          max_tokens: 1000,
+        }),
       })
 
       console.log("[QualiVerde] Resposta recebida, status:", response.status)
-      const data = await response.json()
-      console.log("[QualiVerde] Dados:", data)
 
-      if (data.success && data.analysis) {
-        this.displayAIResult(data.analysis)
-      } else {
-        this.showError(data.error || "Erro desconhecido", data.details)
+      if (!response.ok) {
+        throw new Error(`Erro na API: ${response.status}`)
       }
+
+      const data = await response.json()
+      console.log("[QualiVerde] Dados brutos:", data)
+
+      // Parse the AI response
+      const aiMessage = data.choices[0]?.message?.content
+      if (!aiMessage) {
+        throw new Error("Resposta da IA vazia")
+      }
+
+      // Extract JSON from the response
+      const jsonMatch = aiMessage.match(/\{[\s\S]*\}/)
+      if (!jsonMatch) {
+        throw new Error("Formato de resposta inválido")
+      }
+
+      const analysis = JSON.parse(jsonMatch[0])
+      console.log("[QualiVerde] Análise parseada:", analysis)
+
+      this.displayAIResult(analysis)
     } catch (error) {
       console.error("[QualiVerde] Erro:", error)
       this.showError("Erro de conexão. Verifique sua internet e tente novamente.", error.message)
